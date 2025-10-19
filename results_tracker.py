@@ -20,19 +20,19 @@ class ResultsTracker:
         """Create CSV file with headers if it doesn't exist."""
         if not os.path.exists(self.csv_file):
             headers = [
-                "Approach/Framework",
-                "Dataset/Benchmark", 
-                "pass@1", "pass@2", "pass@3", "pass@4", "pass@5",
-                "pass@6", "pass@7", "pass@8", "pass@9", "pass@10",
-                "Time (sec)",
-                "Input Tokens",
-                "Output Tokens", 
-                "Total Tokens",
-                "Estimated Cost ($)",
                 "Timestamp",
+                "Dataset/Benchmark",
+                "Approach/Framework",
                 "Model",
                 "Tasks",
-                "Samples per Task"
+                "Samples per Task",
+                "Time (sec)",
+                "Input Tokens",
+                "Output Tokens",
+                "Total Tokens",
+                "Estimated Cost ($)",
+                "pass@1", "pass@2", "pass@3", "pass@4", "pass@5",
+                "pass@6", "pass@7", "pass@8", "pass@9", "pass@10"
             ]
             
             with open(self.csv_file, 'w', newline='') as f:
@@ -116,19 +116,19 @@ class ResultsTracker:
         
         # Prepare row data
         row = [
-            approach,  # Approach/Framework
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),  # Timestamp
             "HumanEval",  # Dataset/Benchmark
-            pass_at_k[1], pass_at_k[2], pass_at_k[3], pass_at_k[4], pass_at_k[5],
-            pass_at_k[6], pass_at_k[7], pass_at_k[8], pass_at_k[9], pass_at_k[10],
+            approach,  # Approach/Framework
+            model,  # Model
+            num_tasks,  # Tasks
+            samples_per_task,  # Samples per Task
             execution_time,  # Time (sec)
             input_tokens,  # Input Tokens
             output_tokens,  # Output Tokens
             total_tokens,  # Total Tokens
             round(estimated_cost, 4),  # Estimated Cost ($)
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),  # Timestamp
-            model,  # Model
-            num_tasks,  # Tasks
-            samples_per_task  # Samples per Task
+            pass_at_k[1], pass_at_k[2], pass_at_k[3], pass_at_k[4], pass_at_k[5],
+            pass_at_k[6], pass_at_k[7], pass_at_k[8], pass_at_k[9], pass_at_k[10]
         ]
         
         # Ensure file ends with newline before appending
