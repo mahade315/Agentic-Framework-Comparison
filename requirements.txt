@@ -12,3 +12,10 @@ langchain-openai>=0.0.5
 
 # Qwen-Agent dependencies (optional, only needed if USE_QWEN_AGENT=true)
 qwen-agent>=0.0.26
+
+# LangChain dependencies (optional, only needed if USE_LANGCHAIN=true)
+langchain>=0.3.0
+langchain-core>=0.3.0
+
+# LangGraph dependencies (optional, only needed if USE_LANGGRAPH=true)
+langgraph>=1.0.0

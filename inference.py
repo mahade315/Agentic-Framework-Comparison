@@ -14,8 +14,16 @@ load_dotenv()
 # Conditional import based on agent framework setting
 USE_CREWAI = os.getenv("USE_CREWAI", "false").lower() == "true"
 USE_QWEN_AGENT = os.getenv("USE_QWEN_AGENT", "false").lower() == "true"
+USE_LANGCHAIN = os.getenv("USE_LANGCHAIN", "false").lower() == "true"
+USE_LANGGRAPH = os.getenv("USE_LANGGRAPH", "false").lower() == "true"
 
-if USE_QWEN_AGENT:
+if USE_LANGGRAPH:
+    print("🤖 Using LangGraph framework with OpenAI model for code generation")
+    from scripts.langgraph_agent import generate_one_completion
+elif USE_LANGCHAIN:
+    print("🤖 Using LangChain Agent Executor with OpenAI model for code generation")
+    from scripts.langchain_agent import generate_one_completion
+elif USE_QWEN_AGENT:
     print("🤖 Using Qwen-Agent framework with OpenAI model for code generation")
     from scripts.qwen_agent import generate_one_completion
 elif USE_CREWAI:
@@ -77,7 +85,16 @@ def main():
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     # Add agent type to filename for easy differentiation
-    agent_type = "crewai" if USE_CREWAI else "direct"
+    if USE_LANGGRAPH:
+        agent_type = "langgraph"
+    elif USE_LANGCHAIN:
+        agent_type = "langchain"
+    elif USE_QWEN_AGENT:
+        agent_type = "qwen_agent"
+    elif USE_CREWAI:
+        agent_type = "crewai"
+    else:
+        agent_type = "direct"
     base_filename = f"{agent_type}_{model_name.replace('/', '_')}_{timestamp}"
 
     print(f"\n{'='*60}")
@@ -168,7 +185,11 @@ def main():
                 eval_time = time.time() - eval_start_time
                 
                 # Get token usage
-                if USE_QWEN_AGENT:
+                if USE_LANGGRAPH:
+                    from scripts.langgraph_agent import get_token_usage
+                elif USE_LANGCHAIN:
+                    from scripts.langchain_agent import get_token_usage
+                elif USE_QWEN_AGENT:
                     from scripts.qwen_agent import get_token_usage
                 elif USE_CREWAI:
                     from scripts.crewai_agent import get_token_usage
@@ -179,7 +200,11 @@ def main():
                 
                 # Save to combined results CSV
                 tracker = ResultsTracker()
-                if USE_QWEN_AGENT:
+                if USE_LANGGRAPH:
+                    approach_name = "LangGraph Agent"
+                elif USE_LANGCHAIN:
+                    approach_name = "LangChain Agent"
+                elif USE_QWEN_AGENT:
                     approach_name = "Qwen-Agent"
                 elif USE_CREWAI:
                     approach_name = "CrewAI Agent"
@@ -205,7 +230,11 @@ def main():
         print(f"❌ Evaluation error: {e}")
 
     # Get final token stats for display
-    if USE_QWEN_AGENT:
+    if USE_LANGGRAPH:
+        from scripts.langgraph_agent import get_token_usage
+    elif USE_LANGCHAIN:
+        from scripts.langchain_agent import get_token_usage
+    elif USE_QWEN_AGENT:
         from scripts.qwen_agent import get_token_usage
     elif USE_CREWAI:
         from scripts.crewai_agent import get_token_usage

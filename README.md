@@ -4,12 +4,14 @@ A streamlined framework for evaluating LLM code generation capabilities using th
 
 ## 📋 Overview
 
-This project generates Python function completions using **OpenAI models** (direct API) or **CrewAI agents** and evaluates them against the HumanEval benchmark. It provides organized output, progress tracking, and easy evaluation workflows.
+This project generates Python function completions using **OpenAI models** (direct API) or various **agent frameworks** and evaluates them against the HumanEval benchmark. It provides organized output, progress tracking, and easy evaluation workflows.
 
-**Three modes available:**
+**Five modes available:**
 - 🔧 **Direct Mode**: Fast, direct OpenAI API calls
 - 🤖 **CrewAI Mode**: CrewAI agents with reasoning capabilities
 - 🚀 **Qwen-Agent Mode**: Qwen-Agent framework with OpenAI models
+- ⚡ **LangChain Mode**: LangChain Agent Executor with OpenAI models
+- 🌐 **LangGraph Mode**: LangGraph framework with graph-based agents
 
 ## 🚀 Quick Start
 
@@ -43,6 +45,12 @@ USE_CREWAI=false
 
 # Optional: Use Qwen-Agent framework
 USE_QWEN_AGENT=false
+
+# Optional: Use LangChain Agent Executor
+USE_LANGCHAIN=false
+
+# Optional: Use LangGraph framework
+USE_LANGGRAPH=false
 ```
 
 ### 3. Run Inference
@@ -55,6 +63,21 @@ USE_CREWAI=false TASK_LIMIT=5 NUM_SAMPLES_PER_TASK=2 python inference.py
 **Test CrewAI Agent:**
 ```bash
 USE_CREWAI=true TASK_LIMIT=5 NUM_SAMPLES_PER_TASK=2 python inference.py
+```
+
+**Test Qwen-Agent:**
+```bash
+USE_QWEN_AGENT=true TASK_LIMIT=5 NUM_SAMPLES_PER_TASK=2 python inference.py
+```
+
+**Test LangChain Agent:**
+```bash
+USE_LANGCHAIN=true TASK_LIMIT=5 NUM_SAMPLES_PER_TASK=2 python inference.py
+```
+
+**Test LangGraph Agent:**
+```bash
+USE_LANGGRAPH=true TASK_LIMIT=5 NUM_SAMPLES_PER_TASK=2 python inference.py
 ```
 
 **Full Run (all 164 tasks):**
@@ -442,14 +465,92 @@ Starting HumanEval Inference
 ============================================================
 ```
 
+## ⚡ Using LangChain Agent Executor
+
+### What is LangChain Mode?
+
+LangChain mode uses the **LangChain Agent Executor** with OpenAI models to provide:
+- 🤖 **Agent Executor**: LangChain's ReAct agent pattern
+- ⚡ **Fast Performance**: Optimized for speed and efficiency
+- 🔧 **OpenAI Integration**: Uses your existing OpenAI API key and models
+- 📊 **Agent Comparison**: Compare different agent executor frameworks
+
+### Setup LangChain Agent
+
+**Install dependencies:**
+```bash
+pip install langchain>=0.3.0 langchain-core>=0.3.0
+```
+
+**Configure environment:**
+```bash
+# .env
+USE_LANGCHAIN=true
+OPENAI_API_KEY=your_api_key_here
+OPENAI_MODEL=gpt-4o
+```
+
+### Run with LangChain Agent
+
+```bash
+USE_LANGCHAIN=true TASK_LIMIT=5 python inference.py
+```
+
+You'll see:
+```
+⚡ Using LangChain Agent Executor with OpenAI model for code generation
+============================================================
+Starting HumanEval Inference
+============================================================
+```
+
+## 🌐 Using LangGraph Framework
+
+### What is LangGraph Mode?
+
+LangGraph mode uses the **LangGraph framework** with OpenAI models to provide:
+- 🌐 **Graph-based Architecture**: LangGraph's graph-based agent workflows
+- ⚡ **Fast Performance**: Optimized for speed and efficiency
+- 🔧 **OpenAI Integration**: Uses your existing OpenAI API key and models
+- 📊 **Framework Comparison**: Compare different agent frameworks
+
+### Setup LangGraph Agent
+
+**Install dependencies:**
+```bash
+pip install langgraph>=1.0.0
+```
+
+**Configure environment:**
+```bash
+# .env
+USE_LANGGRAPH=true
+OPENAI_API_KEY=your_api_key_here
+OPENAI_MODEL=gpt-4o
+```
+
+### Run with LangGraph Agent
+
+```bash
+USE_LANGGRAPH=true TASK_LIMIT=5 python inference.py
+```
+
+You'll see:
+```
+🌐 Using LangGraph framework with OpenAI model for code generation
+============================================================
+Starting HumanEval Inference
+============================================================
+```
+
 ### Framework Comparison
 
-| Feature | Direct API | CrewAI Agent | Qwen-Agent |
-|---------|-----------|--------------|------------|
-| **Speed** | ⚡ Fast (1-2s/task) | 🐢 Slower (2-4s/task) | 🚀 Medium (1.5-3s/task) |
-| **Tokens** | 💰 Efficient | 💰💰 More overhead | 💰💰 Medium overhead |
-| **Architecture** | Simple API calls | Agent reasoning | Function calling |
-| **Use Case** | Benchmarking | Research/Analysis | Framework comparison |
+| Feature | Direct API | CrewAI Agent | Qwen-Agent | LangChain Agent | LangGraph Agent |
+|---------|-----------|--------------|------------|----------------|----------------|
+| **Speed** | ⚡ Fast (1-2s/task) | 🐢 Slower (2-4s/task) | 🚀 Medium (1.5-3s/task) | ⚡ Fast (1-2s/task) | ⚡ Fast (1-2s/task) |
+| **Tokens** | 💰 Efficient | 💰💰 More overhead | 💰💰 Medium overhead | 💰💰 Medium overhead | 💰💰 Medium overhead |
+| **Architecture** | Simple API calls | Agent reasoning | Function calling | Agent Executor | Graph-based agent |
+| **Use Case** | Benchmarking | Research/Analysis | Framework comparison | Agent comparison | Graph workflows |
 
 ### When to Use Qwen-Agent?
 
@@ -458,6 +559,25 @@ Starting HumanEval Inference
 - 🛠️ Testing function calling capabilities
 - 📊 Researching different agent architectures
 - 🎓 Learning about Qwen-Agent framework
+
+### When to Use LangChain Agent?
+
+**Use LangChain Agent when:**
+- ⚡ Comparing agent executor frameworks
+- 🔧 Testing LangChain's ReAct agent pattern
+- 📊 Researching different agent architectures
+- 🎓 Learning about LangChain Agent Executor
+- 🚀 Building production agent applications
+
+### When to Use LangGraph Agent?
+
+**Use LangGraph Agent when:**
+- 🌐 Building graph-based agent workflows
+- 🔄 Creating stateful, long-running agents
+- 🛠️ Testing LangGraph's graph architecture
+- 📊 Researching different agent frameworks
+- 🎓 Learning about LangGraph framework
+- 🚀 Building production graph-based applications
 
 ## 📚 References
 
