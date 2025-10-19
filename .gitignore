@@ -1,0 +1,34 @@
+# Environment variables
+.env
+
+# Generated outputs
+outputs/
+
+# Results CSV (optional - uncomment if you want to track results in git)
+# combined_results.csv
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environment
+afhe_env/
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+

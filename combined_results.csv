@@ -1,0 +1,4 @@
+Approach/Framework,Dataset/Benchmark,pass@1,pass@2,pass@3,pass@4,pass@5,pass@6,pass@7,pass@8,pass@9,pass@10,Time (sec),Input Tokens,Output Tokens,Total Tokens,Estimated Cost ($),Timestamp,Model,Tasks,Samples per Task
+OpenAI Direct,HumanEval,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,2.04175066947937,278,28,306,0.0018,2025-10-19 09:38:47,gpt-4o,1,2
+CrewAI Agent,HumanEval,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.2689797878265381,0,0,0,0.0,2025-10-19 09:38:56,gpt-4o,1,2
+CrewAI Agent,HumanEval,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,4.197994232177734,80,127,207,0.0023,2025-10-19 09:39:40,gpt-4o,1,2
