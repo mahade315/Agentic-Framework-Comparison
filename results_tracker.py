@@ -38,6 +38,7 @@ class ResultsTracker:
             with open(self.csv_file, 'w', newline='') as f:
                 writer = csv.writer(f)
                 writer.writerow(headers)
+                f.write('\n')  # Ensure file ends with newline
     
     def calculate_pass_at_k(self, results_file: str, k_values: List[int] = list(range(1, 11))) -> Dict[int, float]:
         """Calculate pass@k metrics from results file."""
@@ -56,20 +57,27 @@ class ResultsTracker:
                     task_results[task_id] = []
                 task_results[task_id].append(passed)
         
-        # Calculate pass@k for each k
+        # Find the maximum number of samples per task
+        max_samples = max(len(results) for results in task_results.values()) if task_results else 0
+        
+        # Calculate pass@k for each k (only if k <= max_samples)
         pass_at_k = {}
         
         for k in k_values:
-            total_tasks = len(task_results)
-            passed_tasks = 0
-            
-            for task_id, results in task_results.items():
-                # For each task, check if at least one of the first k samples passed
-                samples_to_check = results[:k]
-                if any(samples_to_check):
-                    passed_tasks += 1
-            
-            pass_at_k[k] = passed_tasks / total_tasks if total_tasks > 0 else 0.0
+            if k > max_samples:
+                # Not enough samples to calculate pass@k
+                pass_at_k[k] = "N/A"
+            else:
+                total_tasks = len(task_results)
+                passed_tasks = 0
+                
+                for task_id, results in task_results.items():
+                    # For each task, check if at least one of the first k samples passed
+                    samples_to_check = results[:k]
+                    if any(samples_to_check):
+                        passed_tasks += 1
+                
+                pass_at_k[k] = passed_tasks / total_tasks if total_tasks > 0 else 0.0
         
         return pass_at_k
     
@@ -130,8 +138,8 @@ class ResultsTracker:
         
         print(f"\n📊 Results saved to {self.csv_file}")
         print(f"   Approach: {approach}")
-        print(f"   Pass@1: {pass_at_k[1]:.3f}")
-        print(f"   Pass@10: {pass_at_k[10]:.3f}")
+        print(f"   Pass@1: {pass_at_k[1] if pass_at_k[1] != 'N/A' else 'N/A'}")
+        print(f"   Pass@10: {pass_at_k[10] if pass_at_k[10] != 'N/A' else 'N/A'}")
         print(f"   Time: {execution_time:.1f}s")
         print(f"   Tokens: {input_tokens:,} input + {output_tokens:,} output = {total_tokens:,} total")
         print(f"   Cost: ${estimated_cost:.4f}")
