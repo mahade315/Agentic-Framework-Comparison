@@ -56,16 +56,10 @@ class ResultsTracker:
                     task_results[task_id] = []
                 task_results[task_id].append(passed)
         
-        # Find the maximum number of samples per task
-        max_samples = max(len(results) for results in task_results.values()) if task_results else 0
-        
-        # Only calculate pass@k up to the actual number of samples
-        valid_k_values = [k for k in k_values if k <= max_samples]
-        
-        # Calculate pass@k for each valid k
+        # Calculate pass@k for each k
         pass_at_k = {}
         
-        for k in valid_k_values:
+        for k in k_values:
             total_tasks = len(task_results)
             passed_tasks = 0
             
@@ -77,29 +71,7 @@ class ResultsTracker:
             
             pass_at_k[k] = passed_tasks / total_tasks if total_tasks > 0 else 0.0
         
-        # Fill remaining k values with "N/A" since we don't have enough samples
-        for k in k_values:
-            if k not in pass_at_k:
-                pass_at_k[k] = "N/A"
-        
         return pass_at_k
-    
-    def _get_task_results(self, results_file: str) -> Dict[str, List[bool]]:
-        """Helper method to get task results grouped by task_id."""
-        import json
-        
-        task_results = {}
-        with open(results_file, 'r') as f:
-            for line in f:
-                result = json.loads(line.strip())
-                task_id = result['task_id']
-                passed = result['passed']
-                
-                if task_id not in task_results:
-                    task_results[task_id] = []
-                task_results[task_id].append(passed)
-        
-        return task_results
     
     def calculate_cost(self, model: str, input_tokens: int, output_tokens: int) -> float:
         """Calculate estimated cost based on OpenAI pricing."""
@@ -134,20 +106,12 @@ class ResultsTracker:
         total_tokens = input_tokens + output_tokens
         estimated_cost = self.calculate_cost(model, input_tokens, output_tokens)
         
-        # Prepare row data, handling N/A values
-        def format_pass_at_k(value):
-            if value == "N/A":
-                return "N/A"
-            return f"{value:.3f}" if isinstance(value, (int, float)) else str(value)
-        
+        # Prepare row data
         row = [
             approach,  # Approach/Framework
             "HumanEval",  # Dataset/Benchmark
-            format_pass_at_k(pass_at_k[1]), format_pass_at_k(pass_at_k[2]), 
-            format_pass_at_k(pass_at_k[3]), format_pass_at_k(pass_at_k[4]), 
-            format_pass_at_k(pass_at_k[5]), format_pass_at_k(pass_at_k[6]), 
-            format_pass_at_k(pass_at_k[7]), format_pass_at_k(pass_at_k[8]), 
-            format_pass_at_k(pass_at_k[9]), format_pass_at_k(pass_at_k[10]),
+            pass_at_k[1], pass_at_k[2], pass_at_k[3], pass_at_k[4], pass_at_k[5],
+            pass_at_k[6], pass_at_k[7], pass_at_k[8], pass_at_k[9], pass_at_k[10],
             execution_time,  # Time (sec)
             input_tokens,  # Input Tokens
             output_tokens,  # Output Tokens
@@ -166,15 +130,8 @@ class ResultsTracker:
         
         print(f"\n📊 Results saved to {self.csv_file}")
         print(f"   Approach: {approach}")
-        print(f"   Pass@1: {pass_at_k[1] if pass_at_k[1] != 'N/A' else 'N/A'}")
-        
-        # Show the highest meaningful pass@k
-        max_samples = max(len(results) for results in self._get_task_results(results_file).values()) if self._get_task_results(results_file) else 0
-        if max_samples >= 10:
-            print(f"   Pass@10: {pass_at_k[10] if pass_at_k[10] != 'N/A' else 'N/A'}")
-        else:
-            print(f"   Pass@{max_samples}: {pass_at_k[max_samples] if pass_at_k[max_samples] != 'N/A' else 'N/A'} (max samples)")
-        
+        print(f"   Pass@1: {pass_at_k[1]:.3f}")
+        print(f"   Pass@10: {pass_at_k[10]:.3f}")
         print(f"   Time: {execution_time:.1f}s")
         print(f"   Tokens: {input_tokens:,} input + {output_tokens:,} output = {total_tokens:,} total")
         print(f"   Cost: ${estimated_cost:.4f}")

@@ -7,4 +7,3 @@ This package contains:
 - crewai_agent.py: CrewAI agent implementation  
 - sanitize.py: Code sanitization utilities
 """
-
