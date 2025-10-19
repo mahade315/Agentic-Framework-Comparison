@@ -131,6 +131,13 @@ class ResultsTracker:
             samples_per_task  # Samples per Task
         ]
         
+        # Ensure file ends with newline before appending
+        with open(self.csv_file, 'r') as f:
+            content = f.read()
+            if not content.endswith('\n'):
+                with open(self.csv_file, 'a') as f:
+                    f.write('\n')
+        
         # Append to CSV
         with open(self.csv_file, 'a', newline='') as f:
             writer = csv.writer(f)
