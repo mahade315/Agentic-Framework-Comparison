@@ -6,9 +6,10 @@ A streamlined framework for evaluating LLM code generation capabilities using th
 
 This project generates Python function completions using **OpenAI models** (direct API) or **CrewAI agents** and evaluates them against the HumanEval benchmark. It provides organized output, progress tracking, and easy evaluation workflows.
 
-**Two modes available:**
+**Three modes available:**
 - 🔧 **Direct Mode**: Fast, direct OpenAI API calls
-- 🤖 **Agent Mode**: CrewAI agents with reasoning capabilities
+- 🤖 **CrewAI Mode**: CrewAI agents with reasoning capabilities
+- 🚀 **Qwen-Agent Mode**: Qwen-Agent framework with OpenAI models
 
 ## 🚀 Quick Start
 
@@ -39,6 +40,9 @@ NUM_SAMPLES_PER_TASK=10
 
 # Optional: Use CrewAI agents
 USE_CREWAI=false
+
+# Optional: Use Qwen-Agent framework
+USE_QWEN_AGENT=false
 ```
 
 ### 3. Run Inference
@@ -398,6 +402,62 @@ python human-eval/human_eval/evaluate_functional_correctness.py "outputs/Generat
 - Ensure `.env` file exists with `OPENAI_API_KEY`
 - Check API key has sufficient credits
 - CrewAI uses more tokens - ensure adequate quota
+
+## 🚀 Using Qwen-Agent Framework
+
+### What is Qwen-Agent Mode?
+
+Qwen-Agent mode uses the **Qwen-Agent framework** with OpenAI models to provide:
+- 🛠️ **Function Calling**: Built-in tool calling capabilities
+- 🎯 **Agent Architecture**: Qwen-Agent's agent-based approach
+- 🔧 **OpenAI Integration**: Uses your existing OpenAI API key and models
+- 📊 **Framework Comparison**: Compare different agent frameworks
+
+### Setup Qwen-Agent
+
+**Install dependencies:**
+```bash
+pip install qwen-agent>=0.0.26
+```
+
+**Configure environment:**
+```bash
+# .env
+USE_QWEN_AGENT=true
+OPENAI_API_KEY=your_api_key_here
+OPENAI_MODEL=gpt-4o
+```
+
+### Run with Qwen-Agent
+
+```bash
+USE_QWEN_AGENT=true TASK_LIMIT=5 python inference.py
+```
+
+You'll see:
+```
+🚀 Using Qwen-Agent framework with OpenAI model for code generation
+============================================================
+Starting HumanEval Inference
+============================================================
+```
+
+### Framework Comparison
+
+| Feature | Direct API | CrewAI Agent | Qwen-Agent |
+|---------|-----------|--------------|------------|
+| **Speed** | ⚡ Fast (1-2s/task) | 🐢 Slower (2-4s/task) | 🚀 Medium (1.5-3s/task) |
+| **Tokens** | 💰 Efficient | 💰💰 More overhead | 💰💰 Medium overhead |
+| **Architecture** | Simple API calls | Agent reasoning | Function calling |
+| **Use Case** | Benchmarking | Research/Analysis | Framework comparison |
+
+### When to Use Qwen-Agent?
+
+**Use Qwen-Agent when:**
+- 🔬 Comparing agent frameworks
+- 🛠️ Testing function calling capabilities
+- 📊 Researching different agent architectures
+- 🎓 Learning about Qwen-Agent framework
 
 ## 📚 References
 

@@ -11,10 +11,14 @@ from results_tracker import ResultsTracker
 # Load environment first
 load_dotenv()
 
-# Conditional import based on USE_CREWAI setting
+# Conditional import based on agent framework setting
 USE_CREWAI = os.getenv("USE_CREWAI", "false").lower() == "true"
+USE_QWEN_AGENT = os.getenv("USE_QWEN_AGENT", "false").lower() == "true"
 
-if USE_CREWAI:
+if USE_QWEN_AGENT:
+    print("🤖 Using Qwen-Agent framework with OpenAI model for code generation")
+    from scripts.qwen_agent import generate_one_completion
+elif USE_CREWAI:
     print("🤖 Using CrewAI Agent for code generation")
     from scripts.crewai_agent import generate_one_completion
 else:
@@ -91,7 +95,10 @@ def main():
     print(f"✓ Selected {len(task_ids)} tasks from {len(problems)} total problems\n")
 
     # Reset token usage before generation
-    if USE_CREWAI:
+    if USE_QWEN_AGENT:
+        from scripts.qwen_agent import reset_token_usage
+        reset_token_usage()
+    elif USE_CREWAI:
         from scripts.crewai_agent import reset_token_usage
         reset_token_usage()
     else:
@@ -161,7 +168,9 @@ def main():
                 eval_time = time.time() - eval_start_time
                 
                 # Get token usage
-                if USE_CREWAI:
+                if USE_QWEN_AGENT:
+                    from scripts.qwen_agent import get_token_usage
+                elif USE_CREWAI:
                     from scripts.crewai_agent import get_token_usage
                 else:
                     from scripts.openAI_models import get_token_usage
@@ -170,7 +179,12 @@ def main():
                 
                 # Save to combined results CSV
                 tracker = ResultsTracker()
-                approach_name = "CrewAI Agent" if USE_CREWAI else "OpenAI Direct"
+                if USE_QWEN_AGENT:
+                    approach_name = "Qwen-Agent"
+                elif USE_CREWAI:
+                    approach_name = "CrewAI Agent"
+                else:
+                    approach_name = "OpenAI Direct"
                 tracker.add_result(
                     approach=approach_name,
                     results_file=results_path,
@@ -191,7 +205,9 @@ def main():
         print(f"❌ Evaluation error: {e}")
 
     # Get final token stats for display
-    if USE_CREWAI:
+    if USE_QWEN_AGENT:
+        from scripts.qwen_agent import get_token_usage
+    elif USE_CREWAI:
         from scripts.crewai_agent import get_token_usage
     else:
         from scripts.openAI_models import get_token_usage

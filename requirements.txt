@@ -9,3 +9,6 @@ pandas>=1.5.0
 # CrewAI dependencies (optional, only needed if USE_CREWAI=true)
 crewai>=0.1.0
 langchain-openai>=0.0.5
+
+# Qwen-Agent dependencies (optional, only needed if USE_QWEN_AGENT=true)
+qwen-agent>=0.0.26
