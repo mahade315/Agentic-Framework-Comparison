@@ -4,11 +4,13 @@ A streamlined framework for evaluating LLM code generation capabilities using th
 
 ## 📋 Overview
 
-This project generates Python function completions using **OpenAI models** (direct API) or **CrewAI agents** and evaluates them against the HumanEval benchmark. It provides organized output, progress tracking, and easy evaluation workflows.
+This project generates Python function completions using **4 different approaches** and evaluates them against the HumanEval benchmark. It provides organized output, progress tracking, and easy evaluation workflows.
 
-**Two modes available:**
+**Four modes available:**
 - 🔧 **Direct Mode**: Fast, direct OpenAI API calls
-- 🤖 **Agent Mode**: CrewAI agents with reasoning capabilities
+- 🤖 **CrewAI Agent**: Multi-agent collaboration framework
+- 🧠 **MetaGPT Agent**: Multi-step analysis and planning approach
+- ⚙️ **TaskWeaver Agent**: Code-first data analytics framework
 
 ## 🚀 Quick Start
 
@@ -142,6 +144,19 @@ TASK_IDS=HumanEval/0,HumanEval/1,HumanEval/5
 NUM_SAMPLES_PER_TASK=20
 ```
 
+## 🤖 Using Agent Frameworks
+
+The framework supports 4 different approaches for code generation, each with unique characteristics:
+
+### CrewAI Agent
+CrewAI provides multi-agent collaboration for code generation.
+
+### MetaGPT Agent  
+MetaGPT uses a multi-step analysis and planning approach, simulating the agent's reasoning process.
+
+### TaskWeaver Agent
+TaskWeaver follows a code-first approach with systematic planning and execution phases.
+
 ## 🤖 Using CrewAI Agents
 
 ### What is CrewAI Mode?
@@ -220,20 +235,22 @@ This shows:
 - Tool usage (if any)
 - Internal reasoning steps
 
-### Example: Compare Both Modes
+### Example: Compare All Modes
 
 ```bash
 # Run with Direct API
-USE_CREWAI=false TASK_LIMIT=5 python inference.py
-# Results: outputs/Generated Samples/gpt-4o_timestamp1.jsonl
+USE_CREWAI=false USE_METAGPT=false USE_TASKWEAVER=false TASK_LIMIT=5 python inference.py
 
-# Run with CrewAI
-USE_CREWAI=true TASK_LIMIT=5 python inference.py
-# Results: outputs/Generated Samples/gpt-4o_timestamp2.jsonl
+# Run with CrewAI Agent
+USE_CREWAI=true USE_METAGPT=false USE_TASKWEAVER=false TASK_LIMIT=5 python inference.py
 
-# Compare evaluation results
-python human-eval/... timestamp1.jsonl ...
-python human-eval/... timestamp2.jsonl ...
+# Run with MetaGPT Agent
+USE_CREWAI=false USE_METAGPT=true USE_TASKWEAVER=false TASK_LIMIT=5 python inference.py
+
+# Run with TaskWeaver Agent
+USE_CREWAI=false USE_METAGPT=false USE_TASKWEAVER=true TASK_LIMIT=5 python inference.py
+
+# All results are automatically saved to combined_results.csv for comparison
 ```
 
 ## 📊 Results Tracking & CSV Export
