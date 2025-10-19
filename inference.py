@@ -11,12 +11,26 @@ from results_tracker import ResultsTracker
 # Load environment first
 load_dotenv()
 
-# Conditional import based on USE_CREWAI setting
+# Agent selection logic
 USE_CREWAI = os.getenv("USE_CREWAI", "false").lower() == "true"
+USE_METAGPT = os.getenv("USE_METAGPT", "false").lower() == "true"
+USE_TASKWEAVER = os.getenv("USE_TASKWEAVER", "false").lower() == "true"
+
+# Ensure only one agent is selected
+agent_count = sum([USE_CREWAI, USE_METAGPT, USE_TASKWEAVER])
+if agent_count > 1:
+    print("❌ Error: Only one agent framework can be enabled at a time")
+    exit(1)
 
 if USE_CREWAI:
     print("🤖 Using CrewAI Agent for code generation")
     from scripts.crewai_agent import generate_one_completion
+elif USE_METAGPT:
+    print("🧠 Using MetaGPT Agent for code generation")
+    from scripts.metagpt_agent import generate_one_completion
+elif USE_TASKWEAVER:
+    print("⚙️ Using TaskWeaver Agent for code generation")
+    from scripts.taskweaver_agent import generate_one_completion
 else:
     print("🔧 Using OpenAI API directly for code generation")
     from scripts.openAI_models import generate_one_completion
@@ -73,7 +87,15 @@ def main():
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     # Add agent type to filename for easy differentiation
-    agent_type = "crewai" if USE_CREWAI else "direct"
+    if USE_CREWAI:
+        agent_type = "crewai"
+    elif USE_METAGPT:
+        agent_type = "metagpt"
+    elif USE_TASKWEAVER:
+        agent_type = "taskweaver"
+    else:
+        agent_type = "direct"
+    
     base_filename = f"{agent_type}_{model_name.replace('/', '_')}_{timestamp}"
 
     print(f"\n{'='*60}")
@@ -93,6 +115,12 @@ def main():
     # Reset token usage before generation
     if USE_CREWAI:
         from scripts.crewai_agent import reset_token_usage
+        reset_token_usage()
+    elif USE_METAGPT:
+        from scripts.metagpt_agent import reset_token_usage
+        reset_token_usage()
+    elif USE_TASKWEAVER:
+        from scripts.taskweaver_agent import reset_token_usage
         reset_token_usage()
     else:
         from scripts.openAI_models import reset_token_usage
@@ -163,6 +191,10 @@ def main():
                 # Get token usage
                 if USE_CREWAI:
                     from scripts.crewai_agent import get_token_usage
+                elif USE_METAGPT:
+                    from scripts.metagpt_agent import get_token_usage
+                elif USE_TASKWEAVER:
+                    from scripts.taskweaver_agent import get_token_usage
                 else:
                     from scripts.openAI_models import get_token_usage
                 
@@ -170,7 +202,15 @@ def main():
                 
                 # Save to combined results CSV
                 tracker = ResultsTracker()
-                approach_name = "CrewAI Agent" if USE_CREWAI else "OpenAI Direct"
+                if USE_CREWAI:
+                    approach_name = "CrewAI Agent"
+                elif USE_METAGPT:
+                    approach_name = "MetaGPT Agent"
+                elif USE_TASKWEAVER:
+                    approach_name = "TaskWeaver Agent"
+                else:
+                    approach_name = "OpenAI Direct"
+                
                 tracker.add_result(
                     approach=approach_name,
                     results_file=results_path,
@@ -193,6 +233,10 @@ def main():
     # Get final token stats for display
     if USE_CREWAI:
         from scripts.crewai_agent import get_token_usage
+    elif USE_METAGPT:
+        from scripts.metagpt_agent import get_token_usage
+    elif USE_TASKWEAVER:
+        from scripts.taskweaver_agent import get_token_usage
     else:
         from scripts.openAI_models import get_token_usage
     
