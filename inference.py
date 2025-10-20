@@ -16,8 +16,12 @@ USE_CREWAI = os.getenv("USE_CREWAI", "false").lower() == "true"
 USE_QWEN_AGENT = os.getenv("USE_QWEN_AGENT", "false").lower() == "true"
 USE_LANGCHAIN = os.getenv("USE_LANGCHAIN", "false").lower() == "true"
 USE_LANGGRAPH = os.getenv("USE_LANGGRAPH", "false").lower() == "true"
+USE_OPENAI_AGENT = os.getenv("USE_OPENAI_AGENT", "false").lower() == "true"
 
-if USE_LANGGRAPH:
+if USE_OPENAI_AGENT:
+    print("🤖 Using OpenAI Agents SDK with OpenAI model for code generation")
+    from scripts.openai_agent import generate_one_completion
+elif USE_LANGGRAPH:
     print("🤖 Using LangGraph framework with OpenAI model for code generation")
     from scripts.langgraph_agent import generate_one_completion
 elif USE_LANGCHAIN:
@@ -85,7 +89,9 @@ def main():
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     # Add agent type to filename for easy differentiation
-    if USE_LANGGRAPH:
+    if USE_OPENAI_AGENT:
+        agent_type = "openai_agent"
+    elif USE_LANGGRAPH:
         agent_type = "langgraph"
     elif USE_LANGCHAIN:
         agent_type = "langchain"
@@ -185,7 +191,9 @@ def main():
                 eval_time = time.time() - eval_start_time
                 
                 # Get token usage
-                if USE_LANGGRAPH:
+                if USE_OPENAI_AGENT:
+                    from scripts.openai_agent import get_token_usage
+                elif USE_LANGGRAPH:
                     from scripts.langgraph_agent import get_token_usage
                 elif USE_LANGCHAIN:
                     from scripts.langchain_agent import get_token_usage
@@ -200,7 +208,9 @@ def main():
                 
                 # Save to combined results CSV
                 tracker = ResultsTracker()
-                if USE_LANGGRAPH:
+                if USE_OPENAI_AGENT:
+                    approach_name = "OpenAI Agent"
+                elif USE_LANGGRAPH:
                     approach_name = "LangGraph Agent"
                 elif USE_LANGCHAIN:
                     approach_name = "LangChain Agent"
@@ -230,7 +240,9 @@ def main():
         print(f"❌ Evaluation error: {e}")
 
     # Get final token stats for display
-    if USE_LANGGRAPH:
+    if USE_OPENAI_AGENT:
+        from scripts.openai_agent import get_token_usage
+    elif USE_LANGGRAPH:
         from scripts.langgraph_agent import get_token_usage
     elif USE_LANGCHAIN:
         from scripts.langchain_agent import get_token_usage

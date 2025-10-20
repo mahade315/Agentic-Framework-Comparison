@@ -6,12 +6,13 @@ A streamlined framework for evaluating LLM code generation capabilities using th
 
 This project generates Python function completions using **OpenAI models** (direct API) or various **agent frameworks** and evaluates them against the HumanEval benchmark. It provides organized output, progress tracking, and easy evaluation workflows.
 
-**Five modes available:**
+**Six modes available:**
 - 🔧 **Direct Mode**: Fast, direct OpenAI API calls
 - 🤖 **CrewAI Mode**: CrewAI agents with reasoning capabilities
 - 🚀 **Qwen-Agent Mode**: Qwen-Agent framework with OpenAI models
 - ⚡ **LangChain Mode**: LangChain Agent Executor with OpenAI models
 - 🌐 **LangGraph Mode**: LangGraph framework with graph-based agents
+- 🎯 **OpenAI Agent Mode**: OpenAI Agents SDK with official OpenAI framework
 
 ## 🚀 Quick Start
 
@@ -51,6 +52,9 @@ USE_LANGCHAIN=false
 
 # Optional: Use LangGraph framework
 USE_LANGGRAPH=false
+
+# Optional: Use OpenAI Agents SDK
+USE_OPENAI_AGENT=false
 ```
 
 ### 3. Run Inference
@@ -78,6 +82,11 @@ USE_LANGCHAIN=true TASK_LIMIT=5 NUM_SAMPLES_PER_TASK=2 python inference.py
 **Test LangGraph Agent:**
 ```bash
 USE_LANGGRAPH=true TASK_LIMIT=5 NUM_SAMPLES_PER_TASK=2 python inference.py
+```
+
+**Test OpenAI Agent:**
+```bash
+USE_OPENAI_AGENT=true TASK_LIMIT=5 NUM_SAMPLES_PER_TASK=2 python inference.py
 ```
 
 **Full Run (all 164 tasks):**
@@ -543,14 +552,53 @@ Starting HumanEval Inference
 ============================================================
 ```
 
+## 🎯 Using OpenAI Agents SDK
+
+### What is OpenAI Agent Mode?
+
+OpenAI Agent mode uses the **official OpenAI Agents SDK** to provide:
+- 🎯 **Official Framework**: OpenAI's own agent framework
+- ⚡ **Fast Performance**: Optimized for speed and efficiency
+- 🔧 **OpenAI Integration**: Uses your existing OpenAI API key and models
+- 📊 **Framework Comparison**: Compare different agent frameworks
+
+### Setup OpenAI Agent
+
+**Install dependencies:**
+```bash
+pip install openai-agents>=0.4.0
+```
+
+**Configure environment:**
+```bash
+# .env
+USE_OPENAI_AGENT=true
+OPENAI_API_KEY=your_api_key_here
+OPENAI_MODEL=gpt-4o
+```
+
+### Run with OpenAI Agent
+
+```bash
+USE_OPENAI_AGENT=true TASK_LIMIT=5 python inference.py
+```
+
+You'll see:
+```
+🎯 Using OpenAI Agents SDK with OpenAI model for code generation
+============================================================
+Starting HumanEval Inference
+============================================================
+```
+
 ### Framework Comparison
 
-| Feature | Direct API | CrewAI Agent | Qwen-Agent | LangChain Agent | LangGraph Agent |
-|---------|-----------|--------------|------------|----------------|----------------|
-| **Speed** | ⚡ Fast (1-2s/task) | 🐢 Slower (2-4s/task) | 🚀 Medium (1.5-3s/task) | ⚡ Fast (1-2s/task) | ⚡ Fast (1-2s/task) |
-| **Tokens** | 💰 Efficient | 💰💰 More overhead | 💰💰 Medium overhead | 💰💰 Medium overhead | 💰💰 Medium overhead |
-| **Architecture** | Simple API calls | Agent reasoning | Function calling | Agent Executor | Graph-based agent |
-| **Use Case** | Benchmarking | Research/Analysis | Framework comparison | Agent comparison | Graph workflows |
+| Feature | Direct API | CrewAI Agent | Qwen-Agent | LangChain Agent | LangGraph Agent | OpenAI Agent |
+|---------|-----------|--------------|------------|----------------|----------------|--------------|
+| **Speed** | ⚡ Fast (1-2s/task) | 🐢 Slower (2-4s/task) | 🚀 Medium (1.5-3s/task) | ⚡ Fast (1-2s/task) | ⚡ Fast (1-2s/task) | ⚡ Fast (1-3s/task) |
+| **Tokens** | 💰 Efficient | 💰💰 More overhead | 💰💰 Medium overhead | 💰💰 Medium overhead | 💰💰 Medium overhead | 💰💰 Medium overhead |
+| **Architecture** | Simple API calls | Agent reasoning | Function calling | Agent Executor | Graph-based agent | OpenAI Agents SDK |
+| **Use Case** | Benchmarking | Research/Analysis | Framework comparison | Agent comparison | Graph workflows | Official OpenAI framework |
 
 ### When to Use Qwen-Agent?
 
@@ -578,6 +626,16 @@ Starting HumanEval Inference
 - 📊 Researching different agent frameworks
 - 🎓 Learning about LangGraph framework
 - 🚀 Building production graph-based applications
+
+### When to Use OpenAI Agent?
+
+**Use OpenAI Agent when:**
+- 🎯 Using the official OpenAI agent framework
+- 🔬 Comparing agent frameworks with OpenAI's own SDK
+- 📊 Researching different agent architectures
+- 🎓 Learning about OpenAI Agents SDK
+- 🚀 Building production applications with OpenAI's framework
+- ⚡ Testing OpenAI's latest agent capabilities
 
 ## 📚 References
 
