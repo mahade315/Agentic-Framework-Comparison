@@ -19,3 +19,6 @@ langchain-core>=0.3.0
 
 # LangGraph dependencies (optional, only needed if USE_LANGGRAPH=true)
 langgraph>=1.0.0
+
+# OpenAI Agents dependencies (optional, only needed if USE_OPENAI_AGENT=true)
+openai-agents>=0.4.0
